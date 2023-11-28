@@ -163,3 +163,114 @@ dependencies {
 The targetCompatibility and sourceCompatibility of this library are set to JavaVersion.VERSION_17.
 
 ## Features
+
+### Synchronous call
+```kotlin
+@JsonRpcCall("method_name")
+fun myFunction(...): MyDto // just don't use 'suspend' keyword
+```
+
+```java
+myService.execute() // not enqueue
+```
+### Positional parameters
+If the JSON RPC 2.0 method takes parameters, but the parameters do not have names.
+```kotlin
+@JsonRpcCall("method_name")
+suspend fun getSome(
+    @JsonRpcPosParam
+    firstParam: String,
+    @JsonRpcPosParam
+    secondParam: Boolean,
+): Any
+```
+
+### Notification call
+If you don't expect any response from the request, use JsonRpcNotification annotation instead of JsonRpcCall.
+Kotlin:
+```kotlin
+@JsonRpcNotification("method_name")
+suspend fun notify(@JsonRpcParam("paramName") param: String)
+```
+
+Java:
+```java
+@JsonRpcNotification(methodName = "method_name")
+NotificationCall notify(@JsonRpcParam(paramName = "param_name") String param);
+
+```
+myService.notify("param").enqueue(new NotificationCallback() {
+    @Override
+    public void onFailure(@NonNull NotificationCall notificationCall, @NonNull Throwable throwable) {
+        // handle errors
+    }
+    /* You can also optionally override onResponse
+    to know when the request is completed. */
+});
+```java
+
+### Multiple params objects (list of dto objects) and multiple result objects
+Example of a request with multiple parameters and a response in the form of a list:
+```
+json request
+{
+   "id": 123,
+   "jsonrpc": "2.0",
+   "method": "method_name",
+   "params": [{
+         "param": "param_value_1"
+      },
+      {
+         "param": "param_value_2"
+      }
+   ]
+}
+```
+```
+json response
+{
+  "jsonrpc": "2.0",
+  "id": 123,
+  "result": [
+    {
+      "result_field": "some text 1",
+      "additional_info_field": "some info 1"
+    },
+    {
+      "result_field": "some text 2",
+      "additional_info_field": "some info 2"
+    },
+  ]
+}
+```
+#### How to send list of params objects and get list of results:
+```kotlin
+@JsonRpcCall("method_name")
+suspend fun getSome(
+    @JsonRpcList
+    listWtf: List<ParamDto>
+): List<ResultDto>
+```
+```kotlin
+data class ResultDto(
+    val address: String,
+    val removed: Boolean,
+    val topics: List<String>,
+    ...
+)
+```
+```kotlin
+data class ParamDto(
+    @RpcParamField("fromBlock")
+    val fromBlock: String,
+    @RpcParamField("topics")
+    val topics: List<String>,
+    ...
+)
+```
+
+### How to get JsonRpcResponse object in Kotlin
+```kotlin
+@JsonRpcCall("method_name")
+suspend fun getSome(...): JsonRpcResponse<MyDto> // or list of MyDto
+```
