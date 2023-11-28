@@ -3,6 +3,8 @@ A Retrofit-like library for JSON-RPC 2.0 requests.
 
 ```kotlin
 
+## Usage in Kotlin
+
 interface MyService {
 
   @JsonRpcCall("method_name")
@@ -37,20 +39,66 @@ class MyRepository(private val myService: MyService) {
               TODO("Handle IOException. For example no internet connection.")
             }
             is JsonRpcException -> {
-              TODO("Handle JsonRpcException. Exception is thrown when the error body in the JSON RPC Response object is not null.")
+              TODO("Handle JsonRpcException. Exception is thrown when" +
+              " the error body in the JSON RPC Response object is not null.")
             }
             is TransportException -> {
-              TODO("Handle TransportException. Exception is thrown when the http response body is null and not successful")
+              TODO("Handle TransportException. Exception is thrown" +
+              " when the http response body is null and not successful")
             }
             else -> {
               TODO("Handle unknown exception.")
             }
           }
       }
-    } // !!!!!!!!!!!!!!!!!!!you should not call this on Main Thread. Use Dispatchers.IO
+    } // !!!!!!!!!!!you should not call this on Main Thread. Use Dispatchers.IO
   }
 }
 ```
+
+## Usage in Java
+
+```Java
+interface TestRpc {
+  @JsonRpcNotification(methodName = "method_name")
+  Call<Dto> myMethod(
+    @JsonRpcParam(paramName = "first_param_name")
+    String firstParam,
+    @JsonRpcParam(paramName = "second_param_name")
+    boolean b,
+  );
+
+  String BASE_URL = "https://my-base-url.com";
+}
+
+void someMethodInSomeClass() {
+ final MyService myService = new JsonRpcLight
+                            .Builder()
+                            .baseUrl(TestRpc.BASE_URL)
+                            .build()
+                            .create(MyService.class);
+  myService.myMethod("firstParam", true).enqueue(new Callback<Dto>() {
+    @Override
+    public void onResponse(@NonNull Call<Dto> call, @NonNull JsonRpcResponse<Dto> jsonRpcResponse) {
+    /*
+    Note that requests are executed in the background thread;
+    however, despite this, the library does not switch the thread to the main one after receiving the response.
+    You have to do it yourself, for example, through mainHandler.post(...). */
+      final JsonRpcError error;
+      final Dto result;
+      if((error = jsonRpcResponse.getError()) != null) {
+        // Handle JsonRpcError 
+      } else if ((result = jsonRpcResponse.getResult()) != null) {
+        System.out.println(result.getFirstField());
+      }
+    }
+
+    @Override
+    public void onFailure(@NonNull Call<Dto> call, @NonNull Throwable throwable) {
+      TODO("handle throwable")
+    }
+  });
+}
 
 ## Download 
 
@@ -78,8 +126,6 @@ dependencies {
 }
 ```
 
-The targetCompatibility and sourceCompatibility of this library are set to JavaVersion.VERSION_17.
-
 Using Groovy
 
 `settings.gradle`
@@ -103,3 +149,7 @@ dependencies {
     ...
 }
 ```
+
+The targetCompatibility and sourceCompatibility of this library are set to JavaVersion.VERSION_17.
+
+## Features
