@@ -1,3 +1,6 @@
+[![Release](https://github.com/olegaches/jsonrpc-light)
+[![License]()
+
 # jsonrpc-light
 A Retrofit-like library for JSON-RPC 2.0 requests
 
