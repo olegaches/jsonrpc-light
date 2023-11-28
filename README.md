@@ -1,5 +1,5 @@
-[![Release](https://github.com/olegaches/jsonrpc-light)
-[![License]()
+[![Release](https://jitpack.io/v/olegaches/jsonrpc-light.svg)](https://jitpack.io/#olegaches/jsonrpc-light)
+[![License](https://github.com/olegaches/jsonrpc-light/blob/main/LICENSE)
 
 # jsonrpc-light
 A Retrofit-like library for JSON-RPC 2.0 requests
