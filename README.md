@@ -1,10 +1,8 @@
 # jsonrpc-light
 A Retrofit-like library for JSON-RPC 2.0 requests.
 
-```kotlin
-
 ## Usage in Kotlin
-
+```kotlin
 interface MyService {
 
   @JsonRpcCall("method_name")
