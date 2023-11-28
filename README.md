@@ -64,46 +64,49 @@ class MyRepository(private val myService: MyService) {
 
 ```Java
 interface TestRpc {
-	@JsonRpcNotification(methodName = "method_name")
-  	Call<MyDto> myMethod(
-    	@JsonRpcParam(paramName = "first_param_name")
-    	String firstParam,
-    	@JsonRpcParam(paramName = "second_param_name")
-    	boolean secondParam,
-  	);
+    @JsonRpcNotification(methodName = "method_name")
+    Call<MyDto> myMethod(
+            @JsonRpcParam(paramName = "first_param_name")
+            String firstParam,
+            @JsonRpcParam(paramName = "second_param_name")
+            boolean secondParam
+            );
 
-	String BASE_URL = "https://my-base-url.com";
+    String BASE_URL = "https://my-base-url.com";
 }
 
-void someMethodInSomeClass() {
-	final MyService myService = new JsonRpcLight
-                            .Builder()
-                            .baseUrl(TestRpc.BASE_URL)
-                            .build()
-                            .create(MyService.class);
-	myService.myMethod("firstParam", true).enqueue(new Callback<MyDto>() {
-    	@Override
-    	public void onResponse(@NonNull Call<MyDto> call, @NonNull JsonRpcResponse<MyDto> jsonRpcResponse) {
-    	/* !!!!!!!!
-    	Note that requests are executed in the background thread;
-    	however, despite this, the library DOES NOT switch 
-    	the thread to the Main one after receiving the response.
-    	You have to do it yourself, for example, through mainHandler.post(...). */
+class SomeClass {
+    void someMethodInSomeClass() {
+        final MyService myService = new JsonRpcLight
+                .Builder()
+                .baseUrl(TestRpc.BASE_URL)
+                .build()
+                .create(MyService.class);
 
-      		final JsonRpcError error;
-      		final MyDto result;
-      		if((error = jsonRpcResponse.getError()) != null) {
-        		// Handle JsonRpcError 
-      		} else if ((result = jsonRpcResponse.getResult()) != null) {
-        		System.out.println(result.getFirstField());
-      		}
-    	}
+        myService.myMethod("firstParam", true).enqueue(new Callback<MyDto>() {
+            @Override
+            public void onResponse(@NonNull Call<MyDto> call, @NonNull JsonRpcResponse<MyDto> jsonRpcResponse) {
+    	        /* !!!!!!!!
+    	        Note that requests are executed in the background thread;
+    	        however, despite this, the library DOES NOT switch
+    	        the thread to the Main one after receiving the response.
+    	        You have to do it yourself, for example, through mainHandler.post(...). */
 
-    	@Override
-    	public void onFailure(@NonNull Call<MyDto> call, @NonNull Throwable throwable) {
-      		TODO("handle throwable")
-    	}
-  	});
+                final JsonRpcError error;
+                final MyDto result;
+                if((error = jsonRpcResponse.getError()) != null) {
+                    // Handle JsonRpcError
+                } else if ((result = jsonRpcResponse.getResult()) != null) {
+                    System.out.println(result.getFirstField());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MyDto> call, @NonNull Throwable throwable) {
+                TODO("handle throwable")
+            }
+        });
+    }
 }
 ```
 
