@@ -78,9 +78,10 @@ void someMethodInSomeClass() {
   myService.myMethod("firstParam", true).enqueue(new Callback<MyDto>() {
     @Override
     public void onResponse(@NonNull Call<MyDto> call, @NonNull JsonRpcResponse<MyDto> jsonRpcResponse) {
-    /*
+    /* !!!!!!!!
     Note that requests are executed in the background thread;
-    however, despite this, the library does not switch the thread to the main one after receiving the response.
+    however, despite this, the library DOES NOT switch 
+    the thread to the Main one after receiving the response.
     You have to do it yourself, for example, through mainHandler.post(...). */
       final JsonRpcError error;
       final MyDto result;
