@@ -1,5 +1,5 @@
 # jsonrpc-light
-A Retrofit-like library for JSON-RPC 2.0 requests.
+A Retrofit-like library for JSON-RPC 2.0 requests
 
 ## Usage in Kotlin
 ```kotlin
