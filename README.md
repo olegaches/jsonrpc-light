@@ -188,6 +188,7 @@ suspend fun getSome(
 
 ### Notification call
 If you don't expect any response from the request, use JsonRpcNotification annotation instead of JsonRpcCall.
+
 Kotlin:
 ```kotlin
 @JsonRpcNotification("method_name")
@@ -250,7 +251,7 @@ json response
 @JsonRpcCall("method_name")
 suspend fun getSome(
     @JsonRpcList
-    listWtf: List<ParamDto>
+    myList: List<ParamDto>
 ): List<ResultDto>
 ```
 ```kotlin
@@ -274,5 +275,5 @@ data class ParamDto(
 ### How to get JsonRpcResponse object in Kotlin
 ```kotlin
 @JsonRpcCall("method_name")
-suspend fun getSome(...): JsonRpcResponse<MyDto> // or list of MyDto
+suspend fun getSome(...): JsonRpcResponse<MyDto> // or JsonRpcResponse<List<MyDto>>
 ```
