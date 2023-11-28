@@ -59,11 +59,11 @@ class MyRepository(private val myService: MyService) {
 ```Java
 interface TestRpc {
   @JsonRpcNotification(methodName = "method_name")
-  Call<Dto> myMethod(
+  Call<MyDto> myMethod(
     @JsonRpcParam(paramName = "first_param_name")
     String firstParam,
     @JsonRpcParam(paramName = "second_param_name")
-    boolean b,
+    boolean secondParam,
   );
 
   String BASE_URL = "https://my-base-url.com";
@@ -75,15 +75,15 @@ void someMethodInSomeClass() {
                             .baseUrl(TestRpc.BASE_URL)
                             .build()
                             .create(MyService.class);
-  myService.myMethod("firstParam", true).enqueue(new Callback<Dto>() {
+  myService.myMethod("firstParam", true).enqueue(new Callback<MyDto>() {
     @Override
-    public void onResponse(@NonNull Call<Dto> call, @NonNull JsonRpcResponse<Dto> jsonRpcResponse) {
+    public void onResponse(@NonNull Call<MyDto> call, @NonNull JsonRpcResponse<MyDto> jsonRpcResponse) {
     /*
     Note that requests are executed in the background thread;
     however, despite this, the library does not switch the thread to the main one after receiving the response.
     You have to do it yourself, for example, through mainHandler.post(...). */
       final JsonRpcError error;
-      final Dto result;
+      final MyDto result;
       if((error = jsonRpcResponse.getError()) != null) {
         // Handle JsonRpcError 
       } else if ((result = jsonRpcResponse.getResult()) != null) {
@@ -92,11 +92,12 @@ void someMethodInSomeClass() {
     }
 
     @Override
-    public void onFailure(@NonNull Call<Dto> call, @NonNull Throwable throwable) {
+    public void onFailure(@NonNull Call<MyDto> call, @NonNull Throwable throwable) {
       TODO("handle throwable")
     }
   });
 }
+```
 
 ## Download 
 
