@@ -175,7 +175,7 @@ Java:
 myService.execute()
 ```
 ### Positional parameters
-If the JSON RPC 2.0 method takes parameters, but the parameters do not have names.
+If the JSON RPC 2.0 method takes parameters, but the parameters do not have names, use JsonRpcPosParam annotation instead of JsonRpcParam.
 ```kotlin
 @JsonRpcCall("method_name")
 suspend fun getSome(
