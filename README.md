@@ -165,13 +165,14 @@ The targetCompatibility and sourceCompatibility of this library are set to JavaV
 ## Features
 
 ### Synchronous call
+Kotlin:
 ```kotlin
 @JsonRpcCall("method_name")
-fun myFunction(...): MyDto // just don't use 'suspend' keyword
+fun myFunction(...): MyDto // just don't use suspend keyword
 ```
-
+Java:
 ```java
-myService.execute() // not enqueue
+myService.execute()
 ```
 ### Positional parameters
 If the JSON RPC 2.0 method takes parameters, but the parameters do not have names.
