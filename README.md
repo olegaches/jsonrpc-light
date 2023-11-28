@@ -198,8 +198,9 @@ Java:
 ```java
 @JsonRpcNotification(methodName = "method_name")
 NotificationCall notify(@JsonRpcParam(paramName = "param_name") String param);
-
 ```
+
+```java
 myService.notify("param").enqueue(new NotificationCallback() {
     @Override
     public void onFailure(@NonNull NotificationCall notificationCall, @NonNull Throwable throwable) {
@@ -208,7 +209,7 @@ myService.notify("param").enqueue(new NotificationCallback() {
     /* You can also optionally override onResponse
     to know when the request is completed. */
 });
-```java
+```
 
 ### Multiple params objects (list of dto objects) and multiple result objects
 Example of a request with multiple parameters and a response in the form of a list:
