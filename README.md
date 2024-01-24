@@ -58,7 +58,7 @@ class MyRepository(private val myService: MyService) {
                     }
                 }
             }
-        } // !!!!!!!!!!!you should not call this on Main Thread. Use Dispatchers.IO
+        }
     }
 }
 ```
